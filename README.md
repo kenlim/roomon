@@ -20,6 +20,7 @@ OS setup is accomplished via
 
 ### Login immediately
 ```System option > Boot / Auto Login > Console Autologin```
+
 This will allow the Pi to run in headless mode. 
 
 ### Configure hardware
@@ -53,6 +54,14 @@ This might complain that the pipenv folder has to be added to your path. You sho
 set -Ua fish_user_paths /Users/YOURNAME/Library/Python/3.8/bin
 ```
 
+Install dependencies 
+```
+> pipenv install
+```
 
+Run basic app
+```
+> pipenv run python read_all.py
+```
 
 

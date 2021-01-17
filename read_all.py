@@ -58,11 +58,11 @@ print('\n\nPolling:')
 try:
     while True:
         if sensor.get_sensor_data():
-            output = '{4}, {0:.2f} C, {1:.2f} hPa, {2:.2f} %RH'.format(
+            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
+                datetime.now().isoformat(),
                 sensor.data.temperature,
                 sensor.data.pressure,
-                sensor.data.humidity,
-                datetime.now().isoformat())
+                sensor.data.humidity)
 
             if sensor.data.heat_stable:
                 output = ('{0}, {1} Ohms'.format(

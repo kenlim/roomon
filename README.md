@@ -43,7 +43,16 @@ This is a Python project since all the Pimoroni examples are in Python. I am cop
 ### The Hitchhiker's Guide to Python
 I don't do much Python, so I am referring heavily to [The Hitchhiker's Guide to Python](https://docs.python-guide.org).
 
-* This project uses [pipenv](https://docs.python-guide.org/dev/virtualenvs/) for dependency management and running. 
-* 
+This project uses [pipenv](https://docs.python-guide.org/dev/virtualenvs/) for dependency management and running. I've installed it with:
+``` 
+> pip3 install --user pipenv 
+```
+This might complain that the pipenv folder has to be added to your path. You should do this.
+
+```
+set -Ua fish_user_paths /Users/YOURNAME/Library/Python/3.8/bin
+```
+
+
 
 

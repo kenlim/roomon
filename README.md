@@ -59,9 +59,18 @@ Install dependencies
 > pipenv install
 ```
 
+Install smbus on the RaspberryPi
+Couldn't do this on the Mac because there is no library. So only do this on the Raspberry Pi before running:
+```
+> pipenv install smbus
+```
+
+
 Run basic app
 ```
 > pipenv run python read_all.py
 ```
+
+
 
 

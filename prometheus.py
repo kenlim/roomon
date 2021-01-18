@@ -54,10 +54,10 @@ sensor.select_gas_heater_profile(0)
 # sensor.set_gas_heater_profile(200, 150, nb_profile=1)
 # sensor.select_gas_heater_profile(1)
 
-TEMPERATURE = Gauge('temperature', 'Measured temperature in C')
-PRESSURE = Gauge('pressure', 'Measured pressure in hPa')
-HUMIDITY = Gauge('humidity', 'Measured humidity in %RH')
-GAS = Gauge('gas_resistance', 'Measured gas resistance in Ohms')
+TEMPERATURE = Gauge('roomon_bme680_temperature', 'Measured temperature in C')
+PRESSURE = Gauge('roomon_bme680_pressure', 'Measured pressure in hPa')
+HUMIDITY = Gauge('roomon_bme680_humidity', 'Measured humidity in %RH')
+GAS = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
 
 try:
     start_http_server(8000)

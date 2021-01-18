@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5ee4bab9299d0d9a7e4cac24b266593eb1f46940a60e96abb08773bcda2f3c38"
+            "sha256": "4fecff5cd222d6a383a01fcf9398a9c0f7aa35c8e5132a896cf29b66c98f8748"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.8"
+            "python_version": "3.7.3"
         },
         "sources": [
             {
@@ -24,6 +24,14 @@
             ],
             "index": "pypi",
             "version": "==1.0.5"
+        },
+        "prometheus-client": {
+            "hashes": [
+                "sha256:9da7b32f02439d8c04f7777021c304ed51d9ec180604700c1ba72a4d44dceb03",
+                "sha256:b08c34c328e1bf5961f0b4352668e6c8f145b4a087e09b7296ef62cbe4693d35"
+            ],
+            "index": "pypi",
+            "version": "==0.9.0"
         }
     },
     "develop": {}

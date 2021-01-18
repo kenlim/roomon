@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 bme680 = "*"
+prometheus-client = "*"
 
 [dev-packages]
 

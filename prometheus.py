@@ -3,6 +3,7 @@
 from prometheus_client import start_http_server, Summary
 import bme680
 import time
+from datetime import datetime
 
 print("""read-all.py - Displays temperature, pressure, humidity, and gas.
 
@@ -54,7 +55,7 @@ sensor.select_gas_heater_profile(0)
 # sensor.select_gas_heater_profile(1)
 
 TEMPERATURE = Summary('temperature', 'Measured temperature in C')
-PRESSURE = Summary('pressure', 'Measured pressure in hPaC')
+PRESSURE = Summary('pressure', 'Measured pressure in hPa')
 HUMIDITY = Summary('humidity', 'Measured humidity in %RH')
 GAS = Summary('gas_resistance', 'Measured gas resistance in Ohms')
 
@@ -62,14 +63,30 @@ try:
     start_http_server(8000)
     while True:
         if sensor.get_sensor_data():
-            TEMPERATURE.observe(sensor.data.temperature)
-            PRESSURE.observe(sensor.data.pressure)
-            HUMIDITY.observe(sensor.data.humidity)
+            temp = sensor.data.temperature
+            pres = sensor.data.pressure
+            humid = sensor.data.humidity
 
-        if sensor.data.heat_stable:
-            GAS.observe(sensor.data.gas_resistance)
+            TEMPERATURE.observe(temp)
+            PRESSURE.observe(pres)
+            HUMIDITY.observe(humid)
+            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
+                datetime.now().isoformat(),
+                temp,
+                pres,
+                humid)
+
+            if sensor.data.heat_stable:
+                g = sensor.data.gas_resistance
                 
-        time.sleep(60)
+                GAS.observe(g)
+
+                output = ('{0}, {1} Ohms'.format(
+                    output, g))
+                print(output)
+            else:
+                print(output)
+        time.sleep(1)
 
 except KeyboardInterrupt:
     pass

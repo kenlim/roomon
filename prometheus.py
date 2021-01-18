@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Originally from here: https://github.com/pimoroni/bme680-python/blob/master/examples/read-all.py
-from prometheus_client import start_http_server, Summary
+from prometheus_client import start_http_server, Gauge
 import bme680
 import time
 from datetime import datetime
@@ -54,10 +54,10 @@ sensor.select_gas_heater_profile(0)
 # sensor.set_gas_heater_profile(200, 150, nb_profile=1)
 # sensor.select_gas_heater_profile(1)
 
-TEMPERATURE = Summary('temperature', 'Measured temperature in C')
-PRESSURE = Summary('pressure', 'Measured pressure in hPa')
-HUMIDITY = Summary('humidity', 'Measured humidity in %RH')
-GAS = Summary('gas_resistance', 'Measured gas resistance in Ohms')
+TEMPERATURE = Gauge('temperature', 'Measured temperature in C')
+PRESSURE = Gauge('pressure', 'Measured pressure in hPa')
+HUMIDITY = Gauge('humidity', 'Measured humidity in %RH')
+GAS = Gauge('gas_resistance', 'Measured gas resistance in Ohms')
 
 try:
     start_http_server(8000)
@@ -67,9 +67,9 @@ try:
             pres = sensor.data.pressure
             humid = sensor.data.humidity
 
-            TEMPERATURE.observe(temp)
-            PRESSURE.observe(pres)
-            HUMIDITY.observe(humid)
+            TEMPERATURE.set(temp)
+            PRESSURE.set(pres)
+            HUMIDITY.set(humid)
             output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
                 datetime.now().isoformat(),
                 temp,
@@ -79,7 +79,7 @@ try:
             if sensor.data.heat_stable:
                 g = sensor.data.gas_resistance
                 
-                GAS.observe(g)
+                GAS.set(g)
 
                 output = ('{0}, {1} Ohms'.format(
                     output, g))

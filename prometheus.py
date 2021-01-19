@@ -68,7 +68,8 @@ sensor.select_gas_heater_profile(0)
 
 temp_g = Gauge('roomon_bme680_temperature', 'Measured temperature in C')
 pressure_g = Gauge('roomon_bme680_pressure', 'Measured pressure in hPa')
-humidity_g = Gauge('roomon_bme680_humidity', 'Measured humidity in %RH')
+humidity_g = Gauge('roomon_bme680_humidity', 'Measured humidity in %Rh')
+humid_score_g = Gauge('roomon_bme680_humidity_score', 'Calculated humidity from baseline in %')
 gas_g = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
 air_g = Gauge('roomon_bme680_air_quality_score', 'Calculated air quality score')
 
@@ -78,20 +79,34 @@ try:
         if sensor.get_sensor_data():
             temp = sensor.data.temperature
             pres = sensor.data.pressure
-            humid = sensor.data.humidity
+            hum = sensor.data.humidity
+            hum_offset = hum - hum_baseline
+
+            # Calculate hum_score as the distance from the hum_baseline.
+            if hum_offset > 0:
+                hum_score = (100 - hum_baseline - hum_offset)
+                hum_score /= (100 - hum_baseline)
+                hum_score *= (hum_weighting * 100)
+
+            else:
+                hum_score = (hum_baseline + hum_offset)
+                hum_score /= hum_baseline
+                hum_score *= (hum_weighting * 100)
+
 
             temp_g.set(temp)
             pressure_g.set(pres)
-            humidity_g.set(humid)
+            humidity_g.set(hum)
+            humid_score_g.set(hum_score)
             output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
                 datetime.now().isoformat(),
                 temp,
                 pres,
-                humid)
+                hum)
             print(output)
             
             now = time.time()
-            if (now - start_time < burn_in_time) and sensor.data.heat_stable:
+            if (now - start_time <= burn_in_time) and sensor.data.heat_stable:
                 gas = sensor.data.gas_resistance
                 burn_in_data.append(gas)
             elif (now - start_time > burn_in_time) and sensor.data.heat_stable:
@@ -100,20 +115,6 @@ try:
 
                 gas = sensor.data.gas_resistance
                 gas_offset = gas_baseline - gas
-
-                hum = sensor.data.humidity
-                hum_offset = hum - hum_baseline
-
-                # Calculate hum_score as the distance from the hum_baseline.
-                if hum_offset > 0:
-                    hum_score = (100 - hum_baseline - hum_offset)
-                    hum_score /= (100 - hum_baseline)
-                    hum_score *= (hum_weighting * 100)
-
-                else:
-                    hum_score = (hum_baseline + hum_offset)
-                    hum_score /= hum_baseline
-                    hum_score *= (hum_weighting * 100)
 
                 # Calculate gas_score as the distance from the gas_baseline.
                 if gas_offset > 0:

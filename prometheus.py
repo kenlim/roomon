@@ -45,6 +45,18 @@ for name in dir(sensor.data):
     if not name.startswith('_'):
         print('{}: {}'.format(name, value))
 
+start_time = time.time()
+burn_in_time = 300
+burn_in_data = []
+gas_baseline = None
+
+# Set the humidity baseline to 40%, an optimal indoor humidity.
+hum_baseline = 40.0
+
+# This sets the balance between humidity and gas reading in the
+# calculation of air_quality_score (25:75, humidity:gas)
+hum_weighting = 0.25
+
 sensor.set_gas_heater_temperature(320)
 sensor.set_gas_heater_duration(150)
 sensor.select_gas_heater_profile(0)
@@ -54,10 +66,11 @@ sensor.select_gas_heater_profile(0)
 # sensor.set_gas_heater_profile(200, 150, nb_profile=1)
 # sensor.select_gas_heater_profile(1)
 
-TEMPERATURE = Gauge('roomon_bme680_temperature', 'Measured temperature in C')
-PRESSURE = Gauge('roomon_bme680_pressure', 'Measured pressure in hPa')
-HUMIDITY = Gauge('roomon_bme680_humidity', 'Measured humidity in %RH')
-GAS = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
+temp_g = Gauge('roomon_bme680_temperature', 'Measured temperature in C')
+pressure_g = Gauge('roomon_bme680_pressure', 'Measured pressure in hPa')
+humidity_g = Gauge('roomon_bme680_humidity', 'Measured humidity in %RH')
+gas_g = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
+air_g = Gauge('roomon_bme680_air_quality_score', 'Calculated air quality score')
 
 try:
     start_http_server(8000)
@@ -67,26 +80,59 @@ try:
             pres = sensor.data.pressure
             humid = sensor.data.humidity
 
-            TEMPERATURE.set(temp)
-            PRESSURE.set(pres)
-            HUMIDITY.set(humid)
+            temp_g.set(temp)
+            pressure_g.set(pres)
+            humidity_g.set(humid)
             output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
                 datetime.now().isoformat(),
                 temp,
                 pres,
                 humid)
 
-            if sensor.data.heat_stable:
-                g = sensor.data.gas_resistance
-                
-                GAS.set(g)
+            now = time.time()
+            if (now - start_time < burn_in_time) and sensor.data.heat_stable:
+                gas = sensor.data.gas_resistance
+                burn_in_data.append(gas)
+            elif (now - start_time > burn_in_time) and sensor.data.heat_stable:
+                if gas_baseline is None:
+                    gas_baseline = sum(burn_in_data[-50:]) / 50.0
 
-                output = ('{0}, {1} Ohms'.format(
-                    output, g))
+                gas = sensor.data.gas_resistance
+                gas_offset = gas_baseline - gas
+
+                hum = sensor.data.humidity
+                hum_offset = hum - hum_baseline
+
+                # Calculate hum_score as the distance from the hum_baseline.
+                if hum_offset > 0:
+                    hum_score = (100 - hum_baseline - hum_offset)
+                    hum_score /= (100 - hum_baseline)
+                    hum_score *= (hum_weighting * 100)
+
+                else:
+                    hum_score = (hum_baseline + hum_offset)
+                    hum_score /= hum_baseline
+                    hum_score *= (hum_weighting * 100)
+
+                # Calculate gas_score as the distance from the gas_baseline.
+                if gas_offset > 0:
+                    gas_score = (gas / gas_baseline)
+                    gas_score *= (100 - (hum_weighting * 100))
+
+                else:
+                    gas_score = 100 - (hum_weighting * 100)
+
+                # Calculate air_quality_score.
+                air_quality_score = hum_score + gas_score
+
+                output = ('{0}, {1} Ohms, {2}'.format(output, gas, air_quality_score))
+                
+                air_g.set(air_quality_score)
+                gas_g.set(gas)
                 print(output)
             else:
                 print(output)
-        time.sleep(1)
+        time.sleep(10)
 
 except KeyboardInterrupt:
     pass

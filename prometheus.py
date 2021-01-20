@@ -88,7 +88,7 @@ humidity_g = Gauge('roomon_bme680_humidity', 'Measured humidity in %Rh')
 humid_score_g = Gauge('roomon_bme680_humidity_score', 'Calculated humidity from baseline in %')
 gas_g = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
 air_g = Gauge('roomon_bme680_air_quality_score', 'Calculated air quality score')
-outside_temp = Gauge('openweathermap_temp', 'Temperature outside in C')
+outside_temp_g = Gauge('openweathermap_temp', 'Temperature outside in C')
 
 try:
     start_http_server(8000)
@@ -98,7 +98,8 @@ try:
             pres = sensor.data.pressure
             hum = sensor.data.humidity
             hum_offset = hum - hum_baseline
-            outside_temp = set(r.json()['main']['temp'])
+            outside_temp = r.json()['main']['temp']
+            outside_temp_g.set(outside_temp)
 
             # Calculate hum_score as the distance from the hum_baseline.
             if hum_offset > 0:
@@ -116,11 +117,12 @@ try:
             pressure_g.set(pres)
             humidity_g.set(hum)
             humid_score_g.set(hum_score)
-            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
+            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH, {4} C'.format(
                 datetime.now().isoformat(),
                 temp,
                 pres,
-                hum)
+                hum, 
+                outside_temp)
             print(output)
             
             now = time.time()

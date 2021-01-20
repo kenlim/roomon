@@ -5,6 +5,22 @@ import bme680
 import time
 from datetime import datetime
 
+import json
+import requests
+from configparser import ConfigParser
+
+
+config = ConfigParser()
+config.read("settings.ini")
+
+apiSettings = config["openweathermap"]
+
+r = requests.get("http://api.openweathermap.org/data/2.5/weather", 
+    {"id" : apiSettings["cityId"], 
+    "units" : apiSettings["units"],
+    "appid" : apiSettings["apiKey"]
+    })
+
 print("""read-all.py - Displays temperature, pressure, humidity, and gas.
 
 Press Ctrl+C to exit!
@@ -72,6 +88,7 @@ humidity_g = Gauge('roomon_bme680_humidity', 'Measured humidity in %Rh')
 humid_score_g = Gauge('roomon_bme680_humidity_score', 'Calculated humidity from baseline in %')
 gas_g = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
 air_g = Gauge('roomon_bme680_air_quality_score', 'Calculated air quality score')
+outside_temp = Gauge('openweathermap_temp', 'Temperature outside in C')
 
 try:
     start_http_server(8000)
@@ -81,6 +98,7 @@ try:
             pres = sensor.data.pressure
             hum = sensor.data.humidity
             hum_offset = hum - hum_baseline
+            outside_temp = set(r.json()['main']['temp'])
 
             # Calculate hum_score as the distance from the hum_baseline.
             if hum_offset > 0:

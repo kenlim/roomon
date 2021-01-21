@@ -130,6 +130,7 @@ try:
             if (now - start_time <= burn_in_time) and sensor.data.heat_stable:
                 gas = sensor.data.gas_resistance
                 burn_in_data.append(gas)
+                print(output)
             elif (now - start_time > burn_in_time) and sensor.data.heat_stable:
                 if gas_baseline is None:
                     gas_baseline = sum(burn_in_data[-50:]) / 50.0

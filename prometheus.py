@@ -125,7 +125,6 @@ try:
                 pres,
                 hum, 
                 outside_temp)
-            print(output)
             
             now = time.time()
             if (now - start_time <= burn_in_time) and sensor.data.heat_stable:

@@ -15,11 +15,7 @@ config.read("settings.ini")
 
 apiSettings = config["openweathermap"]
 
-r = requests.get("http://api.openweathermap.org/data/2.5/weather", 
-    {"id" : apiSettings["cityId"], 
-    "units" : apiSettings["units"],
-    "appid" : apiSettings["apiKey"]
-    })
+
 
 print("""read-all.py - Displays temperature, pressure, humidity, and gas.
 
@@ -98,6 +94,12 @@ try:
             pres = sensor.data.pressure
             hum = sensor.data.humidity
             hum_offset = hum - hum_baseline
+   
+            r = requests.get("http://api.openweathermap.org/data/2.5/weather", 
+                {"id" : apiSettings["cityId"], 
+                "units" : apiSettings["units"],
+                "appid" : apiSettings["apiKey"]
+                })
             outside_temp = r.json()['main']['temp']
             outside_temp_g.set(outside_temp)
 

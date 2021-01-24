@@ -66,6 +66,7 @@ Couldn't do this on the Mac because there is no library. So only do this on the 
 ```
 
 
+
 Run basic app
 ```
 > pipenv run python read_all.py

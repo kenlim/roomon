@@ -54,7 +54,7 @@ This might complain that the pipenv folder has to be added to your path. You sho
 set -Ua fish_user_paths /Users/YOURNAME/Library/Python/3.8/bin
 ```
 
-Install dependencies 
+### Install dependencies 
 ```
 > pipenv install
 ```
@@ -65,7 +65,13 @@ Couldn't do this on the Mac because there is no library. So only do this on the 
 > pipenv install smbus
 ```
 
-
+Configure the environment with a settings.ini file:
+```
+[openweathermap]
+cityId = <your city id>
+units = metric
+apiKey = <your api key>
+```
 
 Run basic app
 ```

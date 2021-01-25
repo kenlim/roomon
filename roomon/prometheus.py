@@ -8,12 +8,9 @@ class Prometheus_Logger:
         self.humidity_g = Gauge('roomon_bme680_humidity', 'Measured humidity in %Rh')
         self.gas_g = Gauge('roomon_bme680_gas_resistance', 'Measured gas resistance in Ohms')
 
-    def log(self, temperature, pressure, humidity):
+    def log(self, temperature, pressure, humidity, gas_resistance = None):
         self.temp_g.set(temperature)
         self.humidity_g.set(humidity)
         self.pressure_g.set(pressure)
-
-    def log(self, temperature, pressure, humidity, gas_resistance):
-        self.log(temperature, pressure, humidity)
-        self.gas_g.set(gas_resistance)
-        
+        if gas_resistance is not None:
+            self.gas_g.set(gas_resistance)    

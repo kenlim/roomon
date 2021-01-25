@@ -7,7 +7,6 @@ from prometheus_client import start_http_server, Gauge
 config = ConfigParser()
 config.read("settings.ini")
 
-pollFrequency = int(config["DEFAULT"]["pollFrequency"])
 apiSettings = config["openweathermap"]
 
 r = requests.get("http://api.openweathermap.org/data/2.5/weather", 
@@ -26,5 +25,5 @@ while True:
 
     tempGauge.set(temp)
 
-    time.sleep(pollFrequency)
+    time.sleep(int(apiSettings["pollInterval"]))
 

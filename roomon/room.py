@@ -4,6 +4,7 @@ import bme680
 import time
 from datetime import datetime
 from configparser import ConfigParser
+from prometheus import Prometheus_Logger
 
 config = ConfigParser()
 config.read("settings.ini")

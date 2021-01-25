@@ -7,15 +7,15 @@ This is a super simple room temperature monitor built on a Raspberry PI and some
 * [Pimoroni 1.3" LCD SPI display](https://shop.pimoroni.com/products/1-3-spi-colour-lcd-240x240-breakout)
 * [Pimoroni Breakout Garden HAT](https://shop.pimoroni.com/products/breakout-garden-hat-i2c-spi)
 
-# Installation 
-## Hardware
+## Installation
 * By default, the LCD screen should be installed in the *front* SPI slot
 * The BME680 sensor goes in any I2C slot
-  
+
+# Software  
 ## Setting up the Raspberry Pi 
 OS setup is accomplished via 
 ```
-> sudo-raspi-config
+> sudo raspi-config
 ```
 
 ### Login immediately
@@ -30,7 +30,7 @@ Under *Interface options* enable:
 * I2C
 
 ## Software setup
-Install dependencies by executing
+Install Pimoroni drivers by executing
 ```
 > sudo apt-get install pimoroni
 ```
@@ -41,7 +41,6 @@ This is a Python project since all the Pimoroni examples are in Python. I am cop
 * [Pimoroni BME680](https://github.com/pimoroni/bme680-python)
 * [Pimoroni 1.3" LCD SPI display](https://github.com/pimoroni/st7789-python)
 
-### The Hitchhiker's Guide to Python
 I don't do much Python, so I am referring heavily to [The Hitchhiker's Guide to Python](https://docs.python-guide.org).
 
 This project uses [pipenv](https://docs.python-guide.org/dev/virtualenvs/) for dependency management and running. I've installed it with:
@@ -72,8 +71,16 @@ apiKey = <your api key>
 
 Run basic app
 ```
-> pipenv run python read_all.py
+> pipenv run python roomon/weather.py
 ```
+
+## Prometheus
+```
+> sudo apt install prometheus
+
+```
+
+Prometheus is configured in /etc/prometheus/prometheus.yml
 
 
 

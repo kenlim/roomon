@@ -17,6 +17,7 @@ r = requests.get("http://api.openweathermap.org/data/2.5/weather",
 
 tempGauge = Gauge('openweathermap_temp', 'Temperature outside in C')
 
+start_http_server(8001)
 print(r.url)
 while True:
     temp = r.json()["main"]["temp"]

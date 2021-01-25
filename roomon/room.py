@@ -1,8 +1,15 @@
 #!/usr/bin/env python
-## Originally from here: https://github.com/pimoroni/bme680-python/blob/master/examples/read-all.py
+# Originally from here: https://github.com/pimoroni/bme680-python/blob/master/examples/read-all.py
 import bme680
 import time
 from datetime import datetime
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read("settings.ini")
+
+apiSettings = config["bme680"]
+pollInterval = apiSettings["pollInterval"]
 
 print("""read-all.py - Displays temperature, pressure, humidity, and gas.
 
@@ -30,7 +37,6 @@ for name in dir(sensor.calibration_data):
 # These oversampling settings can be tweaked to
 # change the balance between accuracy and noise in
 # the data.
-
 sensor.set_humidity_oversample(bme680.OS_2X)
 sensor.set_pressure_oversample(bme680.OS_4X)
 sensor.set_temperature_oversample(bme680.OS_8X)
@@ -52,30 +58,33 @@ sensor.select_gas_heater_profile(0)
 # with their own temperature and duration.
 # sensor.set_gas_heater_profile(200, 150, nb_profile=1)
 # sensor.select_gas_heater_profile(1)
+prometheus = Prometheus_Logger()
 
-f = open("reading.log", "a")
-print('\n\nPolling:')
 try:
     while True:
         if sensor.get_sensor_data():
-            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
+            temperature = sensor.data.temperature
+            pressure = sensor.data.pressure
+            humidity = sensor.data.humidity
+
+            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH, {4} C'.format(
                 datetime.now().isoformat(),
-                sensor.data.temperature,
-                sensor.data.pressure,
-                sensor.data.humidity)
-
+                temp,
+                pres,
+                hum)
+            
+            
             if sensor.data.heat_stable:
-                output = ('{0}, {1} Ohms'.format(
-                    output,
-                    sensor.data.gas_resistance))
-                print(output)    
-                f.write(output + "\n")
-            else:
-                print(output)
-                f.write(output + "\n")
+                gas_resistance = sensor.data.gas_resistance
 
-        time.sleep(60)
+                output = ('{0}, {1} Ohms'.format(output, gas_resistance))
+                
+                prometheus.log(temperature, pressure, humidity, gas_resistance)
+                print(output)
+            else:
+                prometheus.log(temperature, pressure, humidity)
+                print(output)
+        time.sleep(pollInterval)
 
 except KeyboardInterrupt:
-    f.close()
     pass

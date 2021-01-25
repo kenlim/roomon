@@ -68,7 +68,7 @@ try:
             pressure = sensor.data.pressure
             humidity = sensor.data.humidity
 
-            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH, {4} C'.format(
+            output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH'.format(
                 datetime.now().isoformat(),
                 temperature,
                 pressure,

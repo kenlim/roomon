@@ -10,7 +10,7 @@ config = ConfigParser()
 config.read("settings.ini")
 
 apiSettings = config["bme680"]
-pollInterval = apiSettings["pollInterval"]
+pollInterval = int(apiSettings["pollInterval"])
 
 print("""read-all.py - Displays temperature, pressure, humidity, and gas.
 

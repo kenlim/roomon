@@ -46,13 +46,10 @@ I don't do much Python, so I am referring heavily to [The Hitchhiker's Guide to 
 
 This project uses [pipenv](https://docs.python-guide.org/dev/virtualenvs/) for dependency management and running. I've installed it with:
 ``` 
+> sudo apt install python3-pip
 > pip3 install --user pipenv 
 ```
-This might complain that the pipenv folder has to be added to your path. You should do this.
-
-```
-set -Ua fish_user_paths /Users/YOURNAME/Library/Python/3.8/bin
-```
+This might complain that the pipenv folder has to be added to your path. However, checking the path shows that the folder is installed.
 
 ### Install dependencies 
 ```

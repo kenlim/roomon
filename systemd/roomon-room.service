@@ -1,0 +1,14 @@
+[Unit]
+Description=Poll BME680 sensor data and store to local Prometheus instance
+After=network.target
+
+[Service]
+ExecStart=/home/pi/.local/bin/pipenv run python roomon/room.py
+WorkingDirectory=/home/pi/roomon
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

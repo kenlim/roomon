@@ -70,9 +70,9 @@ try:
 
             output = '{0}, {1:.2f} C, {2:.2f} hPa, {3:.2f} %RH, {4} C'.format(
                 datetime.now().isoformat(),
-                temp,
-                pres,
-                hum)
+                temperature,
+                pressure,
+                humidity)
             
             
             if sensor.data.heat_stable:

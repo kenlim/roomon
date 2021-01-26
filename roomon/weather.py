@@ -20,9 +20,13 @@ while True:
         "units" : apiSettings["units"],
         "appid" : apiSettings["apiKey"]
         })
-    temp = r.json()["main"]["temp"]
 
-    print(temp)
+    json = r.json()    
+    temp = json["main"]["temp"]
+    humidity = json["main"]["humidity"]
+    pressure = json["main"]["pressure"]
+    timestamp = r.header["Date"]
+    print("{0}, {1}".format(timestamp, temp, pressure, humidity))
 
     tempGauge.set(temp)
 

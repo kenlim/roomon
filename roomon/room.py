@@ -72,8 +72,7 @@ try:
                 datetime.now().isoformat(),
                 temperature,
                 pressure,
-                humidity)
-            
+                humidity)    
             
             if sensor.data.heat_stable:
                 gas_resistance = sensor.data.gas_resistance

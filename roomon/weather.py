@@ -25,7 +25,7 @@ while True:
     temp = json["main"]["temp"]
     humidity = json["main"]["humidity"]
     pressure = json["main"]["pressure"]
-    timestamp = r.header["Date"]
+    timestamp = r.headers["Date"]
     print("{0}, {1}".format(timestamp, temp, pressure, humidity))
 
     tempGauge.set(temp)

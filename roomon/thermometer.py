@@ -23,8 +23,9 @@ while True:
     c = m.get_cold_junction_temperature()
     d = m.get_temperature_delta()
 
-    hotGauge.set(t)
-    coldGauge.set(c)
+    if t > -10:
+        hotGauge.set(t)
+        coldGauge.set(c)
 
     print(t, c, d)
 

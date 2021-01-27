@@ -14,6 +14,8 @@ m.set_thermocouple_type('K')
 # https://forums.pimoroni.com/t/mcp9600-breakout-pim437/13129/3
 # https://www.raspberrypi-spy.co.uk/2018/02/change-raspberry-pi-i2c-bus-speed/
 
+start_http_server(8002)
+
 hotGauge = Gauge('roomon_mcp9600_hot_temp', 'Temperature at hot junction of thermocouple in C')
 coldGauge = Gauge('roomon_mcp9600_hot_temp', 'Temperature at cold junction of thermocouple in C')
 while True:

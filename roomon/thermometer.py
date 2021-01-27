@@ -17,7 +17,7 @@ m.set_thermocouple_type('K')
 start_http_server(8002)
 
 hotGauge = Gauge('roomon_mcp9600_hot_temp', 'Temperature at hot junction of thermocouple in C')
-coldGauge = Gauge('roomon_mcp9600_hot_temp', 'Temperature at cold junction of thermocouple in C')
+coldGauge = Gauge('roomon_mcp9600_cold_temp', 'Temperature at cold junction of thermocouple in C')
 while True:
     t = m.get_hot_junction_temperature()
     c = m.get_cold_junction_temperature()

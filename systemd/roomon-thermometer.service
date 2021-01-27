@@ -1,0 +1,14 @@
+[Unit]
+Description=Poll OpenWeatherMap data and record to local Prometheus instance
+After=network.target
+
+[Service]
+ExecStart=/home/pi/.local/bin/pipenv run python roomon/thermometer.py
+WorkingDirectory=/home/pi/roomon
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
